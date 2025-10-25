@@ -1,0 +1,608 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/demir/Workspace/csb/nopCommerce/src/Plugins/Nop.Plugin.Shipping.Dexpress/Nop.Plugin.Shipping.Dexpress.csproj": {}
+  },
+  "projects": {
+    "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj": {
+      "version": "4.80.0",
+      "restore": {
+        "projectUniqueName": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj",
+        "projectName": "Nop.Core",
+        "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj",
+        "packagesPath": "/home/demir/.nuget/packages/",
+        "outputPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demir/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1901",
+            "NU1902",
+            "NU1903",
+            "NU1904"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "Azure.Extensions.AspNetCore.DataProtection.Blobs": {
+              "target": "Package",
+              "version": "[1.3.4, )"
+            },
+            "Azure.Extensions.AspNetCore.DataProtection.Keys": {
+              "target": "Package",
+              "version": "[1.2.4, )"
+            },
+            "Azure.Identity": {
+              "target": "Package",
+              "version": "[1.13.1, )"
+            },
+            "Humanizer": {
+              "target": "Package",
+              "version": "[2.14.1, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Caching.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Nito.AsyncEx.Coordination": {
+              "target": "Package",
+              "version": "[5.1.2, )"
+            },
+            "System.IO.FileSystem.AccessControl": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Linq.Async": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj": {
+      "version": "4.80.0",
+      "restore": {
+        "projectUniqueName": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj",
+        "projectName": "Nop.Data",
+        "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj",
+        "packagesPath": "/home/demir/.nuget/packages/",
+        "outputPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demir/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1901",
+            "NU1902",
+            "NU1903",
+            "NU1904"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "FluentMigrator": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
+            "FluentMigrator.Runner": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.2.2, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[9.0.1, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "System.Net.NameResolution": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "linq2db": {
+              "target": "Package",
+              "version": "[5.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj": {
+      "version": "4.80.0",
+      "restore": {
+        "projectUniqueName": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj",
+        "projectName": "Nop.Services",
+        "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj",
+        "packagesPath": "/home/demir/.nuget/packages/",
+        "outputPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demir/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1901",
+            "NU1902",
+            "NU1903",
+            "NU1904"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.23.0, )"
+            },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            },
+            "Google.Apis.Auth": {
+              "target": "Package",
+              "version": "[1.68.0, )"
+            },
+            "HarfBuzzSharp.NativeAssets.Linux": {
+              "target": "Package",
+              "version": "[2.8.2.5, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "MaxMind.GeoIP2": {
+              "target": "Package",
+              "version": "[5.2.0, )"
+            },
+            "Microsoft.Identity.Client": {
+              "target": "Package",
+              "version": "[4.66.2, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2022.12.15, )"
+            },
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[2.88.9, )"
+            },
+            "SkiaSharp.NativeAssets.Linux.NoDependencies": {
+              "target": "Package",
+              "version": "[2.88.9, )"
+            },
+            "Svg.Skia": {
+              "target": "Package",
+              "version": "[2.0.0.4, )"
+            },
+            "System.Linq.Dynamic.Core": {
+              "target": "Package",
+              "version": "[1.4.9, )"
+            },
+            "System.ServiceModel.Http": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/demir/Workspace/csb/nopCommerce/src/Plugins/Nop.Plugin.Shipping.Dexpress/Nop.Plugin.Shipping.Dexpress.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/demir/Workspace/csb/nopCommerce/src/Plugins/Nop.Plugin.Shipping.Dexpress/Nop.Plugin.Shipping.Dexpress.csproj",
+        "projectName": "Nop.Plugin.Shipping.Dexpress",
+        "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Plugins/Nop.Plugin.Shipping.Dexpress/Nop.Plugin.Shipping.Dexpress.csproj",
+        "packagesPath": "/home/demir/.nuget/packages/",
+        "outputPath": "/home/demir/Workspace/csb/nopCommerce/src/Plugins/Nop.Plugin.Shipping.Dexpress/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demir/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web/Nop.Web.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web/Nop.Web.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1901",
+            "NU1902",
+            "NU1903",
+            "NU1904"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj": {
+      "version": "4.80.0",
+      "restore": {
+        "projectUniqueName": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj",
+        "projectName": "Nop.Web.Framework",
+        "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj",
+        "packagesPath": "/home/demir/.nuget/packages/",
+        "outputPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demir/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1901",
+            "NU1902",
+            "NU1903",
+            "NU1904"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.3.0, )"
+            },
+            "LigerShark.WebOptimizer.Core": {
+              "target": "Package",
+              "version": "[3.0.426, )"
+            },
+            "WebMarkupMin.AspNetCoreLatest": {
+              "target": "Package",
+              "version": "[2.18.0, )"
+            },
+            "WebMarkupMin.NUglify": {
+              "target": "Package",
+              "version": "[2.18.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web/Nop.Web.csproj": {
+      "version": "4.80.0",
+      "restore": {
+        "projectUniqueName": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web/Nop.Web.csproj",
+        "projectName": "Nop.Web",
+        "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web/Nop.Web.csproj",
+        "packagesPath": "/home/demir/.nuget/packages/",
+        "outputPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demir/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Core/Nop.Core.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj"
+              },
+              "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj": {
+                "projectPath": "/home/demir/Workspace/csb/nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1901",
+            "NU1902",
+            "NU1903",
+            "NU1904"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

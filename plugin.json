@@ -1,0 +1,11 @@
+{
+  "Group": "Dexpress Shipping",
+  "FriendlyName": "Dexpress",
+  "SystemName": "Shipping.Dexpress",
+  "Version": "4.80.0",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "Demir Agovic",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Shipping.Dexpress.dll",
+  "Description": "Dexpress Shipping Method"
+}

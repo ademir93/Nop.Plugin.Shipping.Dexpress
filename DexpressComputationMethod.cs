@@ -2,6 +2,7 @@
 using Nop.Plugin.Shipping.Dexpress.Services;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -11,15 +12,18 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
 {
     private readonly ILocalizationService _localizationService;
     private readonly IDexpressService _dexpressService;
+    protected readonly IScheduleTaskService _scheduleTaskService;
     private readonly IWebHelper _webHelper;
 
     public DexpressComputationMethod(
         ILocalizationService localizationService,
         IDexpressService dexpressService,
+        IScheduleTaskService scheduleTaskService,
         IWebHelper webHelper)
     {
         _localizationService = localizationService;
         _dexpressService = dexpressService;
+        _scheduleTaskService = scheduleTaskService;
         _webHelper = webHelper;
     }
     
@@ -54,6 +58,16 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
     
     public override async Task InstallAsync()
     {
+        await _scheduleTaskService.InsertTaskAsync(new()
+        {
+            Enabled = true,
+            StopOnError = true,
+            Name = DexpressDefaults.SynchronizationTask.Name,
+            Type = DexpressDefaults.SynchronizationTask.Type,
+            Seconds = DexpressDefaults.SynchronizationTask.Period,
+            
+        });
+        
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {

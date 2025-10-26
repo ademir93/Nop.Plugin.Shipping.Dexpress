@@ -95,9 +95,10 @@ public class DexpressService : IDexpressService
             {
                 municipalities.ForEach(municipality =>
                 {
-                    var existingMunicipality = _municipalityRepository.Table.FirstOrDefault(m => m.Id == municipality.Id);
+                    var existingMunicipality = _municipalityRepository.Table.FirstOrDefault(m => m.MId == municipality.Id);
                     if (existingMunicipality == null)
                     {
+                        municipality.MId = municipality.Id;
                         _municipalityRepository.Insert(municipality);
                     }
                     else
@@ -135,9 +136,10 @@ public class DexpressService : IDexpressService
             {
                 towns.ForEach(town =>
                 {
-                    var existingTown = _townRepository.Table.FirstOrDefault(t => t.Id == town.Id);
+                    var existingTown = _townRepository.Table.FirstOrDefault(t => t.TId == town.Id);
                     if (existingTown == null)
                     {
+                        town.TId = town.Id;
                         _townRepository.Insert(town);
                     }
                     else
@@ -180,9 +182,10 @@ public class DexpressService : IDexpressService
             {
                 streets.ForEach(street =>
                 {
-                    var existingStreet = _streetRepository.Table.FirstOrDefault(t => t.Id == street.Id);
+                    var existingStreet = _streetRepository.Table.FirstOrDefault(t => t.TId == street.Id);
                     if (existingStreet == null)
                     {
+                        street.SId = street.Id;
                         _streetRepository.Insert(street);
                     }
                     else

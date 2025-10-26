@@ -58,14 +58,17 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
     
     public override async Task InstallAsync()
     {
-        await _scheduleTaskService.InsertTaskAsync(new()
+        if (await _scheduleTaskService.GetTaskByTypeAsync(DexpressDefaults.SynchronizationTask.Type) == null)
         {
-            Enabled = true,
-            StopOnError = true,
-            Name = DexpressDefaults.SynchronizationTask.Name,
-            Type = DexpressDefaults.SynchronizationTask.Type,
-            Seconds = DexpressDefaults.SynchronizationTask.Period,
-        });
+            await _scheduleTaskService.InsertTaskAsync(new()
+            {
+                Enabled = true,
+                StopOnError = true,
+                Name = DexpressDefaults.SynchronizationTask.Name,
+                Type = DexpressDefaults.SynchronizationTask.Type,
+                Seconds = DexpressDefaults.SynchronizationTask.Period,
+            });
+        }
         
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>

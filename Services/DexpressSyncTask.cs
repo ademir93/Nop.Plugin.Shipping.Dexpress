@@ -4,13 +4,17 @@ namespace Nop.Plugin.Shipping.Dexpress.Services;
 
 public class DexpressSyncTask : IScheduleTask
 {
-    public DexpressSyncTask()
+    private readonly IDexpressService _dexpressService;
+    
+    public DexpressSyncTask(IDexpressService dexpressService)
     {
-        
+        _dexpressService = dexpressService;
     }
     
     public async Task ExecuteAsync()
     {
-        // Implementation for the scheduled task
+        await _dexpressService.SyncMunicipalityAsync();
+        await _dexpressService.SyncTownsAsync();
+        await _dexpressService.SyncStreetsAsync();
     }
 }

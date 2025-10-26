@@ -65,7 +65,6 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
             Name = DexpressDefaults.SynchronizationTask.Name,
             Type = DexpressDefaults.SynchronizationTask.Type,
             Seconds = DexpressDefaults.SynchronizationTask.Period,
-            
         });
         
         //locales

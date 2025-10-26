@@ -1,9 +1,12 @@
-﻿using Nop.Core;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Nop.Core;
 
 namespace Nop.Plugin.Shipping.Dexpress.Domain;
 
 public class Town : BaseEntity
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public new int Id { get; set; }
     public string Name { get; set; }
     public string DName { get; set; }
     public int CentarId { get; set; }

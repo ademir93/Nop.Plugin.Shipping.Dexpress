@@ -12,7 +12,7 @@ public class DexpressShipmentTracker : IShipmentTracker
     
     public Task<string> GetUrlAsync(string trackingNumber, Shipment shipment = null)
     {
-        return Task.FromResult($"https://www.dex.com/track?&tracknum={trackingNumber}");
+        return Task.FromResult($"https://www.dexpress.rs/rs/pracenje-posiljaka/{trackingNumber}");
     }
     
     public async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber, Shipment shipment = null)

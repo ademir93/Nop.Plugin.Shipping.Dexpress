@@ -73,6 +73,8 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
+            ["Plugins.Shipping.Dex.Fields.CClientId"] = "Client Id",
+            ["Plugins.Shipping.Dex.Fields.CClientId.Hint"] = "Specify Dex client id.",
             ["Plugins.Shipping.Dex.Fields.Username"] = "Username",
             ["Plugins.Shipping.Dex.Fields.Username.Hint"] = "Specify Dex username.",
             ["Plugins.Shipping.Dex.Fields.Password"] = "Password",
@@ -80,7 +82,13 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
             ["Plugins.Shipping.Dex.Fields.ApiUrl"] = "Api Url",
             ["Plugins.Shipping.Dex.Fields.ApiUrl.Hint"] = "Api Url of Dex web service.",
             ["Plugins.Shipping.Dex.Fields.Datetime"] = "Datetime for request",
-            ["Plugins.Shipping.Dex.Fields.Datetime.Hint"] = "Specify request datetime."
+            ["Plugins.Shipping.Dex.Fields.Datetime.Hint"] = "Specify request datetime.",
+            ["Plugins.Shipping.Dex.Fields.Prefix"] = "Prefix for street codes",
+            ["Plugins.Shipping.Dex.Fields.Prefix.Hint"] = "Specify prefix for street codes.",
+            ["Plugins.Shipping.Dex.Fields.RangeFrom"] = "Range From",
+            ["Plugins.Shipping.Dex.Fields.RangeFrom.Hint"] = "Specify range from for street codes.",
+            ["Plugins.Shipping.Dex.Fields.RangeTo"] = "Range To",
+            ["Plugins.Shipping.Dex.Fields.RangeTo.Hint"] = "Specify range to for street codes.",
         });
 
         await base.InstallAsync();

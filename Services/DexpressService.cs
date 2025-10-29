@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Globalization;
+using System.Net.Http.Json;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Plugin.Shipping.Dexpress.Domain;
@@ -15,18 +16,23 @@ public class DexpressService : IDexpressService
     private readonly IRepository<Town> _townRepository;
     private readonly IRepository<Street> _streetRepository;
     private readonly DexpressSettings _dexpressSettings;
+    protected readonly IRepository<Shipment> _shipmentRepository;
     
     private string _dexApiUrl;
     private string _username;
     private string _password;
     private string _dateDex;
+    private string _prefix;
+    private int _rangeFrom;
+    private int _rangeTo;
     
     public DexpressService(
         ILogger logger,
         IRepository<Municipality> municipalityRepository,
         IRepository<Town> townRepository,
         IRepository<Street> streetRepository,
-        DexpressSettings dexpressSettings
+        DexpressSettings dexpressSettings,
+        IRepository<Shipment> shipmentRepository
         )
     {
         _logger = logger;
@@ -34,6 +40,7 @@ public class DexpressService : IDexpressService
         _townRepository = townRepository;
         _streetRepository = streetRepository;
         _dexpressSettings = dexpressSettings;
+        _shipmentRepository = shipmentRepository;
         
         _dexApiUrl = _dexpressSettings.ApiUrl;
         _username = _dexpressSettings.Username;
@@ -61,7 +68,7 @@ public class DexpressService : IDexpressService
         try
         {
             var shippingOptions = new ShippingOption();
-            shippingOptions.Name = "Dex";
+            shippingOptions.Name = DexpressDefaults.SystemName;
             shippingOptions.TransitDays = 1;
             shippingOptions.DisplayOrder = 0;
             shippingOptions.Description = string.Empty;
@@ -77,6 +84,56 @@ public class DexpressService : IDexpressService
 
             return (new ShippingOption(), message);
         }
+    }
+
+    public async Task<string> GetShippmentCodeAsync()
+    {   
+        string prefix = _dexpressSettings.Prefix ?? string.Empty;
+        int rangeFrom = _dexpressSettings.RangeFrom;
+        int rangeTo = _dexpressSettings.RangeTo;
+
+        const int totalLength = 12;
+        int numericLength = totalLength - prefix.Length;
+        if (numericLength <= 0)
+        {
+            await _logger.ErrorAsync("Invalid prefix length for shipment code.");
+            return null;
+        }
+
+        // get latest matching tracking number (string ordering works because numeric part is zero-padded)
+        var lastTracking = _shipmentRepository.Table
+            .Where(s => !string.IsNullOrEmpty(s.TrackingNumber)
+                        && s.TrackingNumber.StartsWith(prefix)
+                        && s.TrackingNumber.Length == totalLength)
+            .OrderByDescending(s => s.TrackingNumber)
+            .Select(s => s.TrackingNumber)
+            .FirstOrDefault();
+
+        int nextNumber;
+        if (!string.IsNullOrEmpty(lastTracking))
+        {
+            var numericPartStr = lastTracking.Substring(prefix.Length);
+            if (!int.TryParse(numericPartStr, NumberStyles.None, CultureInfo.InvariantCulture, out var lastNum))
+            {
+                await _logger.ErrorAsync("Failed to parse numeric part of last tracking number.");
+                return null;
+            }
+
+            nextNumber = lastNum + 1;
+        }
+        else
+        {
+            nextNumber = rangeFrom;
+        }
+
+        if (nextNumber > rangeTo)
+        {
+            await _logger.ErrorAsync($"Shipment number exceeded configured range: {rangeTo}.");
+            return null;
+        }
+
+        var numericPart = nextNumber.ToString(CultureInfo.InvariantCulture).PadLeft(numericLength, '0');
+        return prefix + numericPart;
     }
 
     public async Task<bool> SyncMunicipalityAsync()

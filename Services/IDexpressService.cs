@@ -8,4 +8,5 @@ public interface IDexpressService
     Task<bool> SyncMunicipalityAsync();
     Task<bool> SyncTownsAsync();
     Task<bool> SyncStreetsAsync();
+    Task<string> GetShippmentCodeAsync();
 }

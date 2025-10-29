@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Plugin.Shipping.Dexpress.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -18,6 +19,7 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
     private readonly IEventPublisher _eventPublisher;
     private readonly INotificationService _notificationService;
     private readonly ILocalizationService _localizationService;
+    private readonly IDexpressService _dexpressService;
     
     public EventConsumer(
         IOrderService orderService, 
@@ -25,7 +27,8 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
         IShipmentService shipmentService, 
         IEventPublisher eventPublisher,
         INotificationService notificationService,
-        ILocalizationService localizationService
+        ILocalizationService localizationService,
+        IDexpressService dexpressService
     )
     {
         _orderService = orderService;
@@ -34,6 +37,7 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
         _eventPublisher = eventPublisher;
         _notificationService = notificationService;
         _localizationService = localizationService;
+        _dexpressService = dexpressService;
     }
 
     public async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
@@ -50,7 +54,7 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
         var shipment = new Shipment
         {
             OrderId = order.Id,
-            TrackingNumber = "123", /*trecking number*/
+            TrackingNumber = await _dexpressService.GetShippmentCodeAsync(),
             TotalWeight = null,
             AdminComment = null,
             CreatedOnUtc = DateTime.UtcNow

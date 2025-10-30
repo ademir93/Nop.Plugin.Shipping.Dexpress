@@ -45,10 +45,14 @@ public class DexpressController : BasePluginController
     {
         var model = new ConfigurationModel
         {
+            CClientId = _dexpressSettings.CClientId,
             Username = _dexpressSettings.Username,
             Password = _dexpressSettings.Password,
             ApiUrl = _dexpressSettings.ApiUrl,
-            Datetime = _dexpressSettings.Datetime
+            Datetime = _dexpressSettings.Datetime,
+            Prefix = _dexpressSettings.Prefix,
+            RangeFrom = _dexpressSettings.RangeFrom,
+            RangeTo = _dexpressSettings.RangeTo
         };
 
         return View("~/Plugins/Shipping.Dexpress/Views/Configure.cshtml", model);
@@ -61,10 +65,15 @@ public class DexpressController : BasePluginController
         //if (!ModelState.IsValid)
         //    return await Configure();
 
+        _dexpressSettings.CClientId = model.CClientId;
         _dexpressSettings.Username = model.Username;
         _dexpressSettings.Password = model.Password;
         _dexpressSettings.ApiUrl = model.ApiUrl;
         _dexpressSettings.Datetime = model.Datetime;
+        _dexpressSettings.Prefix = model.Prefix;
+        _dexpressSettings.RangeFrom = model.RangeFrom;
+        _dexpressSettings.RangeTo = model.RangeTo;
+        
 
         await _settingService.SaveSettingAsync(_dexpressSettings);
 

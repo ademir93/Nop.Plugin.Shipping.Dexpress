@@ -42,69 +42,77 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
 
     public async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
     {
-        var order = eventMessage.Entity;
+        const int ReadyForShipmentStatusId = 30; // status 'Complete or Ready for Shipment' ID
 
-        if (order.OrderStatusId != 20)
-        {
+        var order = eventMessage.Entity;
+        if (order == null || order.OrderStatusId != ReadyForShipmentStatusId)
             return;
-        }
 
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
+        if (orderItems == null || !orderItems.Any())
+            return;
+
+        var now = DateTime.UtcNow;
+        var trackingNumber = await _dexpressService.GetShippmentCodeAsync();
 
         var shipment = new Shipment
         {
             OrderId = order.Id,
-            TrackingNumber = await _dexpressService.GetShippmentCodeAsync(),
+            TrackingNumber = trackingNumber,
             TotalWeight = null,
             AdminComment = null,
-            CreatedOnUtc = DateTime.UtcNow
+            CreatedOnUtc = now
         };
 
-        var shipmentItems = new List<ShipmentItem>();
+        await _shipmentService.InsertShipmentAsync(shipment);
+        if (shipment.Id <= 0)
+            return;
 
+        var productIds = orderItems.Select(oi => oi.ProductId).Distinct().ToList();
+        var productTasks = productIds.ToDictionary(id => id, id => _productService.GetProductByIdAsync(id));
+        await Task.WhenAll(productTasks.Values);
+        var products = productTasks.ToDictionary(kv => kv.Key, kv => kv.Value.Result);
+
+        var shipmentItems = new List<ShipmentItem>();
         foreach (var orderItem in orderItems)
         {
-            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-            var warehouseId = product.WarehouseId;
+            if (!products.TryGetValue(orderItem.ProductId, out var product) || product == null)
+                continue;
 
+            var warehouseId = product.WarehouseId;
             var maxQtyToAdd = await _orderService.GetTotalNumberOfItemsCanBeAddedToShipmentAsync(orderItem);
             if (maxQtyToAdd <= 0)
                 continue;
 
+            var quantity = Math.Min(orderItem.Quantity, maxQtyToAdd);
 
-            //create a shipment item
             shipmentItems.Add(new ShipmentItem
             {
+                ShipmentId = shipment.Id,
                 OrderItemId = orderItem.Id,
-                Quantity = orderItem.Quantity,
+                Quantity = quantity,
                 WarehouseId = warehouseId
             });
-
-            //if we have at least one item in the shipment, then save it
-            if (shipmentItems.Any())
-            {
-                shipment.TotalWeight = null;
-                await _shipmentService.InsertShipmentAsync(shipment);
-
-                foreach (var shipmentItem in shipmentItems)
-                {
-                    shipmentItem.ShipmentId = shipment.Id;
-                    await _shipmentService.InsertShipmentItemAsync(shipmentItem);
-                }
-
-                //add a note
-                await _orderService.InsertOrderNoteAsync(new OrderNote
-                {
-                    OrderId = order.Id,
-                    Note = "A shipment has been added",
-                    DisplayToCustomer = false,
-                    CreatedOnUtc = DateTime.UtcNow
-                });
-
-                await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
-
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Orders.Shipments.Added"));
-            }
         }
+
+        if (!shipmentItems.Any())
+            return;
+
+        // insert shipment items in parallel
+        var insertTasks = shipmentItems.Select(si => _shipmentService.InsertShipmentItemAsync(si));
+        await Task.WhenAll(insertTasks);
+
+        // add order note, publish event and notify admin
+        await _orderService.InsertOrderNoteAsync(new OrderNote
+        {
+            OrderId = order.Id,
+            Note = "A shipment has been added",
+            DisplayToCustomer = false,
+            CreatedOnUtc = now
+        });
+
+        await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
+        var msg = await _localizationService.GetResourceAsync("Admin.Orders.Shipments.Added");
+        _notificationService.SuccessNotification(msg);
     }
 }

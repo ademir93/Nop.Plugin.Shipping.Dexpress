@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Net.Http.Json;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Plugin.Shipping.Dexpress.Domain;
@@ -16,7 +18,8 @@ public class DexpressService : IDexpressService
     private readonly IRepository<Town> _townRepository;
     private readonly IRepository<Street> _streetRepository;
     private readonly DexpressSettings _dexpressSettings;
-    protected readonly IRepository<Shipment> _shipmentRepository;
+    private readonly IRepository<Shipment> _shipmentRepository;
+    private readonly IShipmentService _shipmentService;
     
     private string _dexApiUrl;
     private string _username;
@@ -32,7 +35,8 @@ public class DexpressService : IDexpressService
         IRepository<Town> townRepository,
         IRepository<Street> streetRepository,
         DexpressSettings dexpressSettings,
-        IRepository<Shipment> shipmentRepository
+        IRepository<Shipment> shipmentRepository,
+        IShipmentService shipmentService
         )
     {
         _logger = logger;
@@ -41,6 +45,7 @@ public class DexpressService : IDexpressService
         _streetRepository = streetRepository;
         _dexpressSettings = dexpressSettings;
         _shipmentRepository = shipmentRepository;
+        _shipmentService = shipmentService;
         
         _dexApiUrl = _dexpressSettings.ApiUrl;
         _username = _dexpressSettings.Username;
@@ -134,6 +139,60 @@ public class DexpressService : IDexpressService
 
         var numericPart = nextNumber.ToString(CultureInfo.InvariantCulture).PadLeft(numericLength, '0');
         return prefix + numericPart;
+    }
+
+    public async Task<Shipment> CreateDexpressShipmentAsync(int orderId, int warehouseId, List<OrderItem> orderItems, List<Product> products)
+    {
+        var dateTimeNow = DateTime.UtcNow;
+        var trackingNumber = await GetShippmentCodeAsync();
+        if (string.IsNullOrEmpty(trackingNumber))
+            return null;
+
+        var shipment = new Shipment
+        {
+            OrderId = orderId,
+            TrackingNumber = trackingNumber,
+            TotalWeight = null,
+            AdminComment = null,
+            CreatedOnUtc = dateTimeNow,
+        };
+        
+        await _shipmentRepository.InsertAsync(shipment);
+        
+        if (shipment.Id <= 0)
+            return null;
+        
+        var shipmentItems = products.Select(product => new ShipmentItem
+        {
+            ShipmentId = shipment.Id,
+            OrderItemId = product.Id,
+            WarehouseId = product.WarehouseId,
+            Quantity = GetQuantityFromOrderItems(orderItems, product.Id)
+        }).ToList();
+
+        foreach (var item in shipmentItems)
+        {
+            await _shipmentService.InsertShipmentItemAsync(item);
+        }
+
+        return shipment;
+    }
+    
+    public async Task<bool> CheckIsOrderFlagByDexpress(IList<OrderNote> orderNotes)
+    {
+        return await Task.FromResult(orderNotes.Any(note => note.Note.Contains("SentToDexpress")));
+    }
+    
+    private int GetQuantityFromOrderItems(List<OrderItem> orderItems, int productId)
+    {
+        var totalQuantity = 0;
+        orderItems.ForEach(orderItem =>
+        {
+            if (orderItem.ProductId == productId)
+                totalQuantity += orderItem.Quantity;
+        });
+
+        return totalQuantity;
     }
 
     public async Task<bool> SyncMunicipalityAsync()

@@ -19,6 +19,7 @@ public class DexpressService : IDexpressService
     private readonly IRepository<Street> _streetRepository;
     private readonly DexpressSettings _dexpressSettings;
     private readonly IRepository<Shipment> _shipmentRepository;
+    private readonly IRepository<DexpressOrder> _orderRepository;
     private readonly IShipmentService _shipmentService;
     
     private string _dexApiUrl;
@@ -36,6 +37,7 @@ public class DexpressService : IDexpressService
         IRepository<Street> streetRepository,
         DexpressSettings dexpressSettings,
         IRepository<Shipment> shipmentRepository,
+        IRepository<DexpressOrder> orderRepository,
         IShipmentService shipmentService
         )
     {
@@ -45,6 +47,7 @@ public class DexpressService : IDexpressService
         _streetRepository = streetRepository;
         _dexpressSettings = dexpressSettings;
         _shipmentRepository = shipmentRepository;
+        _orderRepository = orderRepository;
         _shipmentService = shipmentService;
         
         _dexApiUrl = _dexpressSettings.ApiUrl;
@@ -193,6 +196,17 @@ public class DexpressService : IDexpressService
         });
 
         return totalQuantity;
+    }
+    
+    public async Task<DexpressOrder> PostDexpressOrderAsync(DexpressOrder dexpressOrder)
+    {
+        await _orderRepository.InsertAsync(dexpressOrder);
+        return dexpressOrder;
+    }
+    
+    public async Task<DexpressOrder> GetDexpressOrderAsync(int orderId)
+    {
+        return await _orderRepository.Table.FirstOrDefaultAsync(o => o.OrderId == orderId);
     }
 
     public async Task<bool> SyncMunicipalityAsync()

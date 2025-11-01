@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Plugin.Shipping.Dexpress.Domain;
 using Nop.Plugin.Shipping.Dexpress.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Events;
@@ -43,18 +44,18 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
 
     public async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
     {
-        const int ReadyForShipmentStatusId = 30; // status 'Complete or Ready for Shipment' ID
+        const int ReadyForShipmentStatusId = 20; // status 'Complete or Ready for Shipment' ID
 
         var order = eventMessage.Entity;
         if (order == null)
             return;
         
-        var orderNotes = await _orderService.GetOrderNotesByOrderIdAsync(order.Id);
+        var checkOrderDexpress = await _dexpressService.GetDexpressOrderAsync(order.Id);
 
         if (order.OrderStatusId != ReadyForShipmentStatusId)
             return;
 
-        if (await _dexpressService.CheckIsOrderFlagByDexpress(orderNotes))
+        if (checkOrderDexpress?.Id > 0)
             return; // Already processed by Dexpress
 
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
@@ -93,12 +94,9 @@ public class EventConsumer : IConsumer<EntityUpdatedEvent<Order>>
             CreatedOnUtc = DateTime.Now
         });
 
-        await _orderService.InsertOrderNoteAsync(new OrderNote
+        var orderDexpress = await _dexpressService.PostDexpressOrderAsync(new DexpressOrder
         {
-            OrderId = order.Id,
-            CreatedOnUtc = DateTime.Now,
-            DisplayToCustomer = false,
-            Note = "SentToDexpress",
+            OrderId = order.Id, OrderDate = order.CreatedOnUtc
         });
         
         var message = await _localizationService.GetResourceAsync("Admin.Orders.Shipments.Added");

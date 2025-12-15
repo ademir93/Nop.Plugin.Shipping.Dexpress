@@ -61,6 +61,8 @@ public class DexpressCustomerController : BasePublicController
             addressSettings: _addressSettings,
             loadCountries: async () => await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id));
 
+        model.Address.CountryId = 198; //Serbia
+        model.Address.StateProvinceId = 1433; //Serbia
         return View("~/Plugins/Shipping.Dexpress/Views/Customer/AddressAdd.cshtml", model);
     }
 

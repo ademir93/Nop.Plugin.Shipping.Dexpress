@@ -25,7 +25,7 @@
             @{
                 var dataDictAddress = new ViewDataDictionary(ViewData);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
-                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
+                @await Html.PartialAsync("~/Plugins/Shipping.Dexpress/Views/Shared/Components/_CreateOrUpdateAddress.cshtml", Model.Address, dataDictAddress)
             }
             <div class="buttons">
                 <button type="submit" class="button-1 save-address-button">@T("Common.Save")</button>

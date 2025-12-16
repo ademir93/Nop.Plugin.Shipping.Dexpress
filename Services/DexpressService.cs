@@ -336,4 +336,24 @@ public class DexpressService : IDexpressService
             return false;
         }
     }
+    
+    public async Task<IList<Municipality>> GetAllMunicipalitiesAsync()
+    {
+        return await _municipalityRepository.Table.ToListAsync();
+    }
+    
+    public async Task<IList<Town>> GetTownsByMunicipalityIdAsync(int municipalityId)
+    {
+        return await _townRepository.Table.Where(t => t.MId == municipalityId).ToListAsync();
+    }
+    
+    public async Task<IList<Street>> GetStreetsByTownIdAsync(int townId)
+    {
+        return await _streetRepository.Table.Where(s => s.TId == townId).ToListAsync();
+    }
+    
+    
+    
+    
+    
 }

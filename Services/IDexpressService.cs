@@ -12,6 +12,9 @@ public interface IDexpressService
     Task<bool> SyncMunicipalityAsync();
     Task<bool> SyncTownsAsync();
     Task<bool> SyncStreetsAsync();
+    Task<IList<Municipality>> GetAllMunicipalitiesAsync();
+    Task<IList<Town>> GetTownsByMunicipalityIdAsync(int municipalityId);
+    Task<IList<Street>> GetStreetsByTownIdAsync(int townId);
     Task<string> GetShippmentCodeAsync();
     Task<Shipment> CreateDexpressShipmentAsync(int orderId, int warehouseId, List<OrderItem> orderItems, List<Product> products);
     Task<bool> CheckIsOrderFlagByDexpress(IList<OrderNote> orderNotes);

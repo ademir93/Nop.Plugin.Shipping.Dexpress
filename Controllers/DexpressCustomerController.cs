@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Http;
+using Nop.Plugin.Shipping.Dexpress.Models;
+using Nop.Plugin.Shipping.Dexpress.Services;
 using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -26,6 +28,7 @@ public class DexpressCustomerController : BasePublicController
     protected readonly IAddressService _addressService;
     protected readonly INotificationService _notificationService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IDexpressService _dexpressService;
 
     public DexpressCustomerController(
         AddressSettings addressSettings,
@@ -36,7 +39,8 @@ public class DexpressCustomerController : BasePublicController
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
         IAddressService addressService,
         INotificationService notificationService,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IDexpressService dexpressService)
     {
         _addressSettings = addressSettings;
         _customerService = customerService;
@@ -47,6 +51,7 @@ public class DexpressCustomerController : BasePublicController
         _addressService = addressService;
         _notificationService = notificationService;
         _localizationService = localizationService;
+        _dexpressService = dexpressService;
     }
     
     public virtual async Task<IActionResult> AddressAdd()
@@ -54,15 +59,17 @@ public class DexpressCustomerController : BasePublicController
         if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
             return Challenge();
 
-        var model = new CustomerAddressEditModel();
+        var model = new DexpressAddress();
         await _addressModelFactory.PrepareAddressModelAsync(model.Address,
             address: null,
             excludeProperties: false,
-            addressSettings: _addressSettings,
-            loadCountries: async () => await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id));
+            addressSettings: _addressSettings);
 
         model.Address.CountryId = 198; //Serbia
         model.Address.StateProvinceId = 1433; //Serbia
+
+        model.Address.Municipalities = await _dexpressService.GetAllMunicipalitiesAsync();
+        
         return View("~/Plugins/Shipping.Dexpress/Views/Customer/AddressAdd.cshtml", model);
     }
 
@@ -112,4 +119,21 @@ public class DexpressCustomerController : BasePublicController
 
         return View("~/Plugins/Shipping.Dexpress/Views/Customer/AddressAdd.cshtml", model);
     }
+    
+    [HttpPost]
+    public virtual async Task<IActionResult> GetTownsByMunicipalityId(int municipalityId)
+    {
+        var towns = await _dexpressService.GetTownsByMunicipalityIdAsync(municipalityId);
+        var result = towns.Select(x => new { id = x.TId, name = x.Name }).ToList();
+        return Json(result);
+    }
+    
+    [HttpPost]
+    public virtual async Task<IActionResult> GetStreetsByTownId(int townId)
+    {
+        var streets = await _dexpressService.GetStreetsByTownIdAsync(townId);
+        var result = streets.Select(x => new { id = x.SId, name = x.Name }).ToList();
+        return Json(result);
+    }
+    
 }

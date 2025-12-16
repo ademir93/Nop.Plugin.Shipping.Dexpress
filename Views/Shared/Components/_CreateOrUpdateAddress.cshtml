@@ -1,4 +1,4 @@
-﻿@model AddressModel
+﻿@model DexpressAddressModel
 
 <input class="address-id" asp-for="Id" type="hidden"/>
 <div class="edit-address dexpress-edit-address">
@@ -34,7 +34,7 @@
     }
     @if (Model.CountryEnabled)
     {
-        <div class="inputs">
+        <div class="inputs" style="display: none;">
             <label asp-for="CountryId" asp-postfix=":"></label>
             <select asp-for="CountryId" asp-items="Model.AvailableCountries"
                     data-trigger="country-select"
@@ -46,10 +46,45 @@
             <span asp-validation-for="CountryId"></span>
         </div>
     }
+    
+    <div class="inputs">
+        <label asp-for="MunicipalityId" asp-postfix=":">Municipality</label>
+        <select asp-for="MunicipalityId">
+            <option value="">Select Municipality</option>
+            @foreach (var municipality in Model.Municipalities)
+            {
+                <option value="@municipality.MId">@municipality.Name</option>
+            }
+        </select>
+        <span asp-validation-for="MunicipalityId"></span>
+    </div>
+    
+    <div class="inputs">
+        <label asp-for="TownId" asp-postfix=":">Town</label>
+        <select asp-for="TownId"
+                data-trigger="town-select"
+                data-url="@Url.Action("GetStreetsByTownId", "DexpressCustomer")"
+                data-street="#@Html.IdFor(model => model.StreetId)"
+                data-loading="#streets-loading-progress"
+                disabled="disabled">
+            <option value="">Select Town</option>
+        </select>
+        <span id="towns-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+        <span asp-validation-for="TownId"></span>
+    </div>
 
+    <div class="inputs">
+        <label asp-for="StreetId" asp-postfix=":">Street</label>
+        <select asp-for="StreetId" disabled="disabled">
+            <option value="">Select Street</option>
+        </select>
+        <span id="streets-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+        <span asp-validation-for="StreetId"></span>
+    </div>
+    
     @if (Model.CountryEnabled && Model.StateProvinceEnabled)
     {
-        <div class="inputs">
+        <div class="inputs" style="display: none;">
             <label asp-for="StateProvinceId" asp-postfix=":"></label>
             <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"
                     data-trigger="state-select" disabled="disabled">
@@ -70,6 +105,7 @@
             <span asp-validation-for="County"></span>
         </div>
     }
+    
     @if (Model.CityEnabled)
     {
         <div class="inputs">
@@ -149,4 +185,73 @@
         @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AddressBottom, additionalData = Model })
+    <script>
+        $(function() {
+            // Municipality → Town
+            $("#@Html.IdFor(model => model.MunicipalityId)").change(function(){
+                var selectedItem = $(this).val();
+                var ddlTowns = $("#@Html.IdFor(model => model.TownId)");
+                var ddlStreets = $("#@Html.IdFor(model => model.StreetId)");
+
+                // Reset and disable dependent dropdowns
+                ddlTowns.html('<option value="">@T("Address.SelectTown")</option>');
+                ddlStreets.html('<option value="">@T("Address.SelectStreet")</option>');
+                ddlStreets.prop('disabled', true);
+
+                if (selectedItem) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("GetTownsByMunicipalityId", "DexpressCustomer"))",
+                        data: {
+                            "municipalityId": selectedItem
+                        },
+                        success: function (data, textStatus, jqXHR) {
+                            ddlTowns.html('<option value="">@T("Address.SelectTown")</option>');
+                            $.each(data, function(id, option) {
+                                ddlTowns.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                            ddlTowns.prop('disabled', false);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#getTownsByMunicipalityIdAlert").trigger("click");
+                        }
+                    });
+                } else {
+                    ddlTowns.prop('disabled', true);
+                }
+            });
+
+            // Town → Street
+            $("#@Html.IdFor(model => model.TownId)").change(function(){
+                var selectedItem = $(this).val();
+                var ddlStreets = $("#@Html.IdFor(model => model.StreetId)");
+
+                ddlStreets.html('<option value="">@T("Address.SelectStreet")</option>');
+
+                if (selectedItem) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("GetStreetsByTownId", "DexpressCustomer"))",
+                        data: {
+                            "townId": selectedItem
+                        },
+                        success: function (data, textStatus, jqXHR) {
+                            ddlStreets.html('<option value="">@T("Address.SelectStreet")</option>');
+                            $.each(data, function(id, option) {
+                                ddlStreets.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                            ddlStreets.prop('disabled', false);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $("#getStreetsByTownIdAlert").trigger("click");
+                        }
+                    });
+                } else {
+                    ddlStreets.prop('disabled', true);
+                }
+            });
+        });
+    </script>
 </div>

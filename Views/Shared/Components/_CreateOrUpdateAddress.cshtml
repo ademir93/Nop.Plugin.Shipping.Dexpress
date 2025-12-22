@@ -48,9 +48,9 @@
     }
     
     <div class="inputs">
-        <label asp-for="MunicipalityId" asp-postfix=":">Municipality</label>
+        <label asp-for="MunicipalityId" asp-postfix=":">@T("Plugins.Shipping.Dex.Address.Municipality")</label>
         <select asp-for="MunicipalityId">
-            <option value="">Select Municipality</option>
+            <option value="">@T("Plugins.Shipping.Dex.Address.SelectMunicipality")</option>
             @foreach (var municipality in Model.Municipalities)
             {
                 <option value="@municipality.MId">@municipality.Name</option>
@@ -60,23 +60,23 @@
     </div>
     
     <div class="inputs">
-        <label asp-for="TownId" asp-postfix=":">Town</label>
+        <label asp-for="TownId" asp-postfix=":">@T("Plugins.Shipping.Dex.Address.Town")</label>
         <select asp-for="TownId"
                 data-trigger="town-select"
                 data-url="@Url.Action("GetStreetsByTownId", "DexpressCustomer")"
                 data-street="#@Html.IdFor(model => model.StreetId)"
                 data-loading="#streets-loading-progress"
                 disabled="disabled">
-            <option value="">Select Town</option>
+            <option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>
         </select>
         <span id="towns-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
         <span asp-validation-for="TownId"></span>
     </div>
 
     <div class="inputs">
-        <label asp-for="StreetId" asp-postfix=":">Street</label>
+        <label asp-for="StreetId" asp-postfix=":">@T("Plugins.Shipping.Dex.Address.Street")</label>
         <select asp-for="StreetId" disabled="disabled">
-            <option value="">Select Street</option>
+            <option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>
         </select>
         <span id="streets-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
         <span asp-validation-for="StreetId"></span>

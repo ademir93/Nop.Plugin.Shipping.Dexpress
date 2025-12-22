@@ -5,7 +5,6 @@ namespace Nop.Plugin.Shipping.Dexpress.Models;
 
 public record DexpressAddressModel : AddressModel
 {
-    
     public IList<Municipality> Municipalities { get; set; }
     public List<Town> Towns { get; set; }
     public List<Street> Streets { get; set; }

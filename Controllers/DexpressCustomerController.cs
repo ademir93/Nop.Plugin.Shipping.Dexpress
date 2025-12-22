@@ -74,7 +74,7 @@ public class DexpressCustomerController : BasePublicController
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form)
+    public virtual async Task<IActionResult> AddressAdd(DexpressAddress model, IFormCollection form)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (!await _customerService.IsRegisteredAsync(customer))
@@ -106,7 +106,7 @@ public class DexpressCustomerController : BasePublicController
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerAddresses.Added"));
 
-            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ADDRESSES);
+            return RedirectToAction("AddressAdd", "DexpressCustomer");
         }
 
         //If we got this far, something failed, redisplay form

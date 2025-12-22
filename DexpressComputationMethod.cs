@@ -89,6 +89,12 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
             ["Plugins.Shipping.Dex.Fields.RangeFrom.Hint"] = "Specify range from for street codes.",
             ["Plugins.Shipping.Dex.Fields.RangeTo"] = "Range To",
             ["Plugins.Shipping.Dex.Fields.RangeTo.Hint"] = "Specify range to for street codes.",
+            ["Plugins.Shipping.Dex.Address.Municipality"] = "Grad",
+            ["Plugins.Shipping.Dex.Address.Town"] = "Opština",
+            ["Plugins.Shipping.Dex.Address.Street"] = "Ulica",
+            ["Plugins.Shipping.Dex.Address.SelectMunicipality"] = "Odaberi grad",
+            ["Plugins.Shipping.Dex.Address.SelectTown"] = "Odaberi opštinu",
+            ["Plugins.Shipping.Dex.Address.SelectStreet"] = "Odaberi ulicu",
         });
 
         await base.InstallAsync();

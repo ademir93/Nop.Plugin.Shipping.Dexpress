@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.Dexpress.Domain;
+using Nop.Plugin.Shipping.Dexpress.Models;
 using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.Dexpress.Services;
@@ -20,4 +21,9 @@ public interface IDexpressService
     Task<bool> CheckIsOrderFlagByDexpress(IList<OrderNote> orderNotes);
     Task<DexpressOrder> GetDexpressOrderAsync(int orderId);
     Task<DexpressOrder> PostDexpressOrderAsync(DexpressOrder dexpressOrder);
+    Task DeleteDexAddressAsync(DexAddress address);
+    Task<DexAddress> GetDexAddressByIdAsync(int addressId);
+    Task InsertDexAddressAsync(DexAddress address);
+    Task UpdateDexAddressAsync(DexAddress address);
+    
 }

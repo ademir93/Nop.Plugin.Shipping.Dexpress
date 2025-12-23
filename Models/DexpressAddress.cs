@@ -10,6 +10,4 @@ public record DexpressAddress : CustomerAddressEditModel
     }
 
     public new DexpressAddressModel Address { get; set; }
-    
-    
 }

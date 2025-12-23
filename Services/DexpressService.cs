@@ -5,6 +5,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Plugin.Shipping.Dexpress.Domain;
+using Nop.Plugin.Shipping.Dexpress.Models;
 using Nop.Services.Logging;
 using Nop.Services.Shipping;
 using NUglify.Helpers;
@@ -21,6 +22,7 @@ public class DexpressService : IDexpressService
     private readonly IRepository<Shipment> _shipmentRepository;
     private readonly IRepository<DexpressOrder> _orderRepository;
     private readonly IShipmentService _shipmentService;
+    private readonly IRepository<DexAddress> _dexAddressRepository;
     
     private string _dexApiUrl;
     private string _username;
@@ -38,7 +40,8 @@ public class DexpressService : IDexpressService
         DexpressSettings dexpressSettings,
         IRepository<Shipment> shipmentRepository,
         IRepository<DexpressOrder> orderRepository,
-        IShipmentService shipmentService
+        IShipmentService shipmentService,
+        IRepository<DexAddress> dexAddressRepository
         )
     {
         _logger = logger;
@@ -49,6 +52,7 @@ public class DexpressService : IDexpressService
         _shipmentRepository = shipmentRepository;
         _orderRepository = orderRepository;
         _shipmentService = shipmentService;
+        _dexAddressRepository = dexAddressRepository;
         
         _dexApiUrl = _dexpressSettings.ApiUrl;
         _username = _dexpressSettings.Username;
@@ -351,9 +355,24 @@ public class DexpressService : IDexpressService
     {
         return await _streetRepository.Table.Where(s => s.TId == townId).ToListAsync();
     }
-    
-    
-    
-    
-    
+
+    public async Task InsertDexAddressAsync(DexAddress address)
+    {
+        await _dexAddressRepository.InsertAsync(address);
+    }
+
+    public async Task<DexAddress> GetDexAddressByIdAsync(int addressId)
+    {
+        return await _dexAddressRepository.GetByIdAsync(addressId, cache => default, useShortTermCache: true);
+    }
+
+    public async Task UpdateDexAddressAsync(DexAddress address)
+    {
+        await _dexAddressRepository.UpdateAsync(address);
+    }
+
+    public async Task DeleteDexAddressAsync(DexAddress address)
+    {
+        await _dexAddressRepository.DeleteAsync(address);
+    }
 }

@@ -56,6 +56,7 @@
                 <option value="@municipality.MId">@municipality.Name</option>
             }
         </select>
+        <nop-required />
         <span asp-validation-for="MunicipalityId"></span>
     </div>
     
@@ -69,6 +70,7 @@
                 disabled="disabled">
             <option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>
         </select>
+        <nop-required />
         <span id="towns-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
         <span asp-validation-for="TownId"></span>
     </div>
@@ -78,6 +80,7 @@
         <select asp-for="StreetId" disabled="disabled">
             <option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>
         </select>
+        <nop-required />
         <span id="streets-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
         <span asp-validation-for="StreetId"></span>
     </div>
@@ -194,8 +197,8 @@
                 var ddlStreets = $("#@Html.IdFor(model => model.StreetId)");
 
                 // Reset and disable dependent dropdowns
-                ddlTowns.html('<option value="">@T("Address.SelectTown")</option>');
-                ddlStreets.html('<option value="">@T("Address.SelectStreet")</option>');
+                ddlTowns.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>');
+                ddlStreets.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>');
                 ddlStreets.prop('disabled', true);
 
                 if (selectedItem) {
@@ -207,7 +210,7 @@
                             "municipalityId": selectedItem
                         },
                         success: function (data, textStatus, jqXHR) {
-                            ddlTowns.html('<option value="">@T("Address.SelectTown")</option>');
+                            ddlTowns.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>');
                             $.each(data, function(id, option) {
                                 ddlTowns.append($('<option></option>').val(option.id).html(option.name));
                             });
@@ -227,7 +230,7 @@
                 var selectedItem = $(this).val();
                 var ddlStreets = $("#@Html.IdFor(model => model.StreetId)");
 
-                ddlStreets.html('<option value="">@T("Address.SelectStreet")</option>');
+                ddlStreets.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>');
 
                 if (selectedItem) {
                     $.ajax({
@@ -238,7 +241,7 @@
                             "townId": selectedItem
                         },
                         success: function (data, textStatus, jqXHR) {
-                            ddlStreets.html('<option value="">@T("Address.SelectStreet")</option>');
+                            ddlStreets.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>');
                             $.each(data, function(id, option) {
                                 ddlStreets.append($('<option></option>').val(option.id).html(option.name));
                             });

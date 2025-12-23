@@ -14,5 +14,6 @@ public class SchemaMigration : AutoReversingMigration
         Create.TableFor<Street>();
         Create.TableFor<Town>();
         Create.TableFor<DexpressOrder>();
+        Create.TableFor<DexAddress>();
     }
 }

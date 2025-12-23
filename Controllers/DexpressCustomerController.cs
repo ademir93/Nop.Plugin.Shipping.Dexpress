@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Http;
+using Nop.Plugin.Shipping.Dexpress.Domain;
 using Nop.Plugin.Shipping.Dexpress.Models;
 using Nop.Plugin.Shipping.Dexpress.Services;
 using Nop.Services.Attributes;
@@ -101,6 +102,14 @@ public class DexpressCustomerController : BasePublicController
 
 
             await _addressService.InsertAddressAsync(address);
+
+            await _dexpressService.InsertDexAddressAsync(new DexAddress
+            {
+                AddressId = address.Id,
+                MunicipalityId = model.Address.MunicipalityId,
+                TownId = model.Address.TownId,
+                StreetId = model.Address.StreetId,
+            });
 
             await _customerService.InsertCustomerAddressAsync(customer, address);
 

@@ -14,6 +14,13 @@ public class RouteProvider : IRouteProvider
             pattern: "/customer/addressadd", // must include optional language
             defaults: new { controller = "DexpressCustomer", action = "AddressAdd" }
         );
+        
+        // Override the core GET/POST route
+        endpointRouteBuilder.MapControllerRoute(
+            name: "CustomerAddressAdd",
+            pattern: "/customer/addresses", // must include optional language
+            defaults: new { controller = "DexpressCustomer", action = "Addresses" }
+        );
     }
     
     public int Priority => 2; // must be higher than default routes

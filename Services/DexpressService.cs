@@ -1,14 +1,22 @@
 ﻿using System.Globalization;
 using System.Net.Http.Json;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Plugin.Shipping.Dexpress.Domain;
 using Nop.Plugin.Shipping.Dexpress.Models;
+using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
+using Nop.Web.Models.Common;
+using Nop.Web.Models.Customer;
 using NUglify.Helpers;
+using Nop.Web.Factories;
 
 namespace Nop.Plugin.Shipping.Dexpress.Services;
 
@@ -23,6 +31,12 @@ public class DexpressService : IDexpressService
     private readonly IRepository<DexpressOrder> _orderRepository;
     private readonly IShipmentService _shipmentService;
     private readonly IRepository<DexAddress> _dexAddressRepository;
+    private readonly IWorkContext _workContext;
+    private readonly ICustomerService _customerService;
+    private readonly IStoreMappingService _storeMappingService;
+    private readonly ICountryService _countryService;
+    private readonly IAddressModelFactory _addressModelFactory;
+    private readonly AddressSettings _addressSettings;
     
     private string _dexApiUrl;
     private string _username;
@@ -41,7 +55,13 @@ public class DexpressService : IDexpressService
         IRepository<Shipment> shipmentRepository,
         IRepository<DexpressOrder> orderRepository,
         IShipmentService shipmentService,
-        IRepository<DexAddress> dexAddressRepository
+        IRepository<DexAddress> dexAddressRepository,
+        IWorkContext workContext,
+        ICustomerService customerService,
+        IStoreMappingService storeMappingService,
+        ICountryService countryService,
+        IAddressModelFactory addressModelFactory,
+        AddressSettings addressSettings
         )
     {
         _logger = logger;
@@ -53,6 +73,12 @@ public class DexpressService : IDexpressService
         _orderRepository = orderRepository;
         _shipmentService = shipmentService;
         _dexAddressRepository = dexAddressRepository;
+        _workContext = workContext;
+        _customerService = customerService;
+        _storeMappingService = storeMappingService;
+        _countryService = countryService;
+        _addressModelFactory = addressModelFactory;
+        _addressSettings = addressSettings;
         
         _dexApiUrl = _dexpressSettings.ApiUrl;
         _username = _dexpressSettings.Username;
@@ -374,5 +400,37 @@ public class DexpressService : IDexpressService
     public async Task DeleteDexAddressAsync(DexAddress address)
     {
         await _dexAddressRepository.DeleteAsync(address);
+    }
+    
+    public virtual async Task<DexCustomerAddressListModel> PrepareCustomerAddressListModelAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
+            //enabled for the current store
+            .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
+            .ToListAsync();
+
+        var model = new DexCustomerAddressListModel();
+        foreach (var address in addresses)
+        {
+            var addressModel = new DexpressAddressModel();
+            await _addressModelFactory.PrepareAddressModelAsync(addressModel,
+                address: address,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                loadCountries: async () => await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id));
+
+            var dexAddress = await _dexAddressRepository.Table.FirstOrDefaultAsync(a => a.AddressId == address.Id);
+            if (dexAddress != null)
+            {
+                addressModel.MunicipalityName = _municipalityRepository.Table.FirstOrDefault(m => m.MId == dexAddress.MunicipalityId)?.Name;
+                addressModel.TownName = _townRepository.Table.FirstOrDefault(t => t.TId == dexAddress.TownId)?.Name;
+                addressModel.StreetName = _streetRepository.Table.FirstOrDefault(s => s.SId == dexAddress.StreetId)?.Name;
+            }
+            
+            model.Addresses.Add(addressModel);
+        }
+        return model;
     }
 }

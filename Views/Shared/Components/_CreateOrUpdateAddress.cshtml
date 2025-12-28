@@ -66,6 +66,7 @@
                 data-trigger="town-select"
                 data-url="@Url.Action("GetStreetsByTownId", "DexpressCustomer")"
                 data-street="#@Html.IdFor(model => model.StreetId)"
+                data-pttno="#@Html.IdFor(model => model.ZipPostalCode)"
                 data-loading="#streets-loading-progress"
                 disabled="disabled">
             <option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>
@@ -149,7 +150,7 @@
     {
         <div class="inputs">
             <label asp-for="ZipPostalCode" asp-postfix=":"></label>
-            <input asp-for="ZipPostalCode" />
+            <input asp-for="ZipPostalCode" disabled="disabled"/>
             @if (Model.ZipPostalCodeRequired)
             {
                 <nop-required />
@@ -195,11 +196,13 @@
                 var selectedItem = $(this).val();
                 var ddlTowns = $("#@Html.IdFor(model => model.TownId)");
                 var ddlStreets = $("#@Html.IdFor(model => model.StreetId)");
-
+                var zipPostalCode = $("#@Html.IdFor(model => model.ZipPostalCode)");
+                
                 // Reset and disable dependent dropdowns
                 ddlTowns.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>');
                 ddlStreets.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>');
                 ddlStreets.prop('disabled', true);
+                zipPostalCode.val('');
 
                 if (selectedItem) {
                     $.ajax({
@@ -211,8 +214,13 @@
                         },
                         success: function (data, textStatus, jqXHR) {
                             ddlTowns.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>');
+                            ddlTowns.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectTown")</option>');
                             $.each(data, function(id, option) {
-                                ddlTowns.append($('<option></option>').val(option.id).html(option.name));
+                                var townOption = $('<option></option>')
+                                    .val(option.id)
+                                    .html(option.name)
+                                    .attr('data-pttno', option.pttNo); // Use attr() instead of data()
+                                ddlTowns.append(townOption);
                             });
                             ddlTowns.prop('disabled', false);
                         },
@@ -229,6 +237,15 @@
             $("#@Html.IdFor(model => model.TownId)").change(function(){
                 var selectedItem = $(this).val();
                 var ddlStreets = $("#@Html.IdFor(model => model.StreetId)");
+                var zipPostalCode = $("#@Html.IdFor(model => model.ZipPostalCode)");
+
+                // Get PttNo from selected town option
+                var pttNo = $(this).find('option:selected').attr('data-pttno');
+                if (pttNo) {
+                    zipPostalCode.val(pttNo);
+                } else {
+                    zipPostalCode.val('');
+                }
 
                 ddlStreets.html('<option value="">@T("Plugins.Shipping.Dex.Address.SelectStreet")</option>');
 

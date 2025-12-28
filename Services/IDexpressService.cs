@@ -25,5 +25,5 @@ public interface IDexpressService
     Task<DexAddress> GetDexAddressByIdAsync(int addressId);
     Task InsertDexAddressAsync(DexAddress address);
     Task UpdateDexAddressAsync(DexAddress address);
-    
+    Task<DexCustomerAddressListModel> PrepareCustomerAddressListModelAsync();
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Http;
 using Nop.Plugin.Shipping.Dexpress.Domain;
 using Nop.Plugin.Shipping.Dexpress.Models;
 using Nop.Plugin.Shipping.Dexpress.Services;
@@ -14,7 +13,6 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Controllers;
 using Nop.Web.Factories;
-using Nop.Web.Models.Customer;
 
 namespace Nop.Plugin.Shipping.Dexpress.Controllers;
 
@@ -30,6 +28,7 @@ public class DexpressCustomerController : BasePublicController
     protected readonly INotificationService _notificationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IDexpressService _dexpressService;
+    protected readonly ICustomerModelFactory _customerModelFactory;
 
     public DexpressCustomerController(
         AddressSettings addressSettings,
@@ -41,7 +40,8 @@ public class DexpressCustomerController : BasePublicController
         IAddressService addressService,
         INotificationService notificationService,
         ILocalizationService localizationService,
-        IDexpressService dexpressService)
+        IDexpressService dexpressService,
+        ICustomerModelFactory customerModelFactory)
     {
         _addressSettings = addressSettings;
         _customerService = customerService;
@@ -53,6 +53,7 @@ public class DexpressCustomerController : BasePublicController
         _notificationService = notificationService;
         _localizationService = localizationService;
         _dexpressService = dexpressService;
+        _customerModelFactory = customerModelFactory;
     }
     
     public virtual async Task<IActionResult> AddressAdd()
@@ -129,11 +130,21 @@ public class DexpressCustomerController : BasePublicController
         return View("~/Plugins/Shipping.Dexpress/Views/Customer/AddressAdd.cshtml", model);
     }
     
+    public virtual async Task<IActionResult> Addresses()
+    {
+        if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            return Challenge();
+
+        var model = await _dexpressService.PrepareCustomerAddressListModelAsync();
+
+        return View("~/Plugins/Shipping.Dexpress/Views/Customer/Addresses.cshtml", model);
+    }
+    
     [HttpPost]
     public virtual async Task<IActionResult> GetTownsByMunicipalityId(int municipalityId)
     {
         var towns = await _dexpressService.GetTownsByMunicipalityIdAsync(municipalityId);
-        var result = towns.Select(x => new { id = x.TId, name = x.Name }).ToList();
+        var result = towns.Select(x => new { id = x.TId, name = x.Name, ZipPostalCode = x.PttNo }).ToList();
         return Json(result);
     }
     

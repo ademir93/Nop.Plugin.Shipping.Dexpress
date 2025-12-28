@@ -95,6 +95,7 @@ public class DexpressComputationMethod : BasePlugin, IShippingRateComputationMet
             ["Plugins.Shipping.Dex.Address.SelectMunicipality"] = "Odaberi grad",
             ["Plugins.Shipping.Dex.Address.SelectTown"] = "Odaberi opštinu",
             ["Plugins.Shipping.Dex.Address.SelectStreet"] = "Odaberi ulicu",
+            ["Plugins.Shipping.Dex.Address.NumberofStreet"] = "Broj ulice",
         });
 
         await base.InstallAsync();

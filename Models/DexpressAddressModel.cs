@@ -14,6 +14,10 @@ public record DexpressAddressModel : AddressModel
     public int TownId { get; set; }
     public int StreetId { get; set; }
     
+    public string MunicipalityName { get; set; }
+    public string TownName { get; set; }
+    public string StreetName { get; set; }
+    
     public Address ToEntity(Address destination = null)
     {
         destination ??= new Address();
